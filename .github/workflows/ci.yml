@@ -1,0 +1,39 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['18', '20', '22']
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: node version
+        run: node -v
+
+      - name: syntax check
+        run: |
+          for f in $(find src bin test -name '*.js'); do
+            node --check "$f"
+          done
+
+      - name: no comments
+        run: node test/check-comments.js .
+
+      - name: mirror core tests
+        env:
+          BMCL_WARMUP: '0'
+        run: node test/run.js

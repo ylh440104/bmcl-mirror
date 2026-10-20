@@ -1,0 +1,21 @@
+services:
+  bmcl-mirror:
+    build: .
+    image: bmcl-mirror:latest
+    container_name: bmcl-mirror
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      BMCL_BASE_URL: ${BMCL_BASE_URL:-http://127.0.0.1:8080}
+      BMCL_CACHE_MAX_BYTES: ${BMCL_CACHE_MAX_BYTES:-68719476736}
+      BMCL_META_TTL: ${BMCL_META_TTL:-300}
+      BMCL_MAX_DOWNLOADS: ${BMCL_MAX_DOWNLOADS:-16}
+    volumes:
+      - ./cache:/data
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8080/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

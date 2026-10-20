@@ -1,0 +1,23 @@
+[Unit]
+Description=bmcl-mirror minecraft resource mirror
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/bmcl-mirror
+Environment=BMCL_PORT=8080
+Environment=BMCL_CACHE_DIR=/var/cache/bmcl-mirror
+Environment=BMCL_BASE_URL=http://127.0.0.1:8080
+Environment=BMCL_CACHE_MAX_BYTES=68719476736
+Environment=BMCL_MAX_DOWNLOADS=16
+ExecStart=/usr/bin/node src/server.js
+Restart=always
+RestartSec=3
+LimitNOFILE=65535
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/var/cache/bmcl-mirror
+
+[Install]
+WantedBy=multi-user.target

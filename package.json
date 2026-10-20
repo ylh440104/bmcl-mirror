@@ -1,0 +1,16 @@
+{
+  "name": "bmcl-mirror",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "self hosted minecraft resource mirror",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node test/run.js",
+    "download": "node bin/download.js"
+  }
+}
