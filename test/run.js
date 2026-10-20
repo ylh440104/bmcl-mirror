@@ -212,8 +212,13 @@ try {
 
   await new Promise(r => setTimeout(r, 300))
   const indexFile = path.join(tmp, '.index.json')
-  const indexRaw = await fs.readFile(indexFile, 'utf8').catch(() => '')
-  const indexJson = jsonOf(Buffer.from(indexRaw))
+  let indexJson = null
+  for (let i = 0; i < 40; i++) {
+    const raw = await fs.readFile(indexFile, 'utf8').catch(() => '')
+    indexJson = jsonOf(Buffer.from(raw))
+    if (indexJson?.entries && Object.keys(indexJson.entries).length > 0) break
+    await new Promise(r => setTimeout(r, 250))
+  }
   record('cache index persisted', Boolean(indexJson?.entries && Object.keys(indexJson.entries).length > 0), `keys=${indexJson ? Object.keys(indexJson.entries).length : 0}`)
 
   const files = await fs.readdir(tmp, { recursive: true }).catch(() => [])

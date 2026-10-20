@@ -207,7 +207,7 @@ export class Cache {
     this.timer = setTimeout(() => {
       this.timer = null
       this.flush().catch(err => console.error('[cache] flush failed:', err.message))
-    }, 2000)
+    }, 1000)
     this.timer.unref?.()
   }
 
